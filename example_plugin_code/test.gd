@@ -1,8 +1,13 @@
-extends Node
+extends Object
 
+# BEGIN_ANDROID_PLUGIN_INCLUDE
+# # because we don't want to have class_name defined in our source project 
+# # we have these comment markers to show content that should be uncommented and copied into the built plugin
+#
+# class_name TestPlugin
+# END_ANDROID_PLUGIN_INCLUDE
 
-
-var _plugin_name = "test"
+var _plugin_name = "generated_test"
 var _plugin_singleton
 
 func _init():
@@ -17,11 +22,3 @@ func helloWorld():
 		_plugin_singleton.helloWorld()
 	else:
 		printerr("Initialization error")
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	_plugin_singleton.helloWorld()
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
