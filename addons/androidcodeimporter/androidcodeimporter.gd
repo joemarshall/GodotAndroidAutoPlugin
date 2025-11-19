@@ -22,3 +22,15 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
 	remove_import_plugin(_importer)
 	_importer = null
+
+#func _handles(object):
+	#for x in object.get_property_list():
+		#if x["name"]=="coderesource.gd":
+			#return true
+		##print(x,object.get(x["name"]))
+#
+#func _edit(object):
+	#print(object.get("resource_path"))
+	#var res_path = ProjectSettings.globalize_path(object.get("resource_path"))
+	#print(res_path)	
+	#OS.shell_open(res_path)

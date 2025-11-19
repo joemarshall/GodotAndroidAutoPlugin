@@ -21,7 +21,10 @@ param(
     [string]$InstallFolder = "",
     
     [Parameter(Mandatory=$false)]
-    [string[] ]$MavenDependencies = ""
+    [string[] ]$MavenDependencies = "",
+
+    [Parameter(Mandatory=$false)]
+    [string]$InterfaceScript = ""
 )
 
 function Pause-ForKey {
@@ -41,8 +44,6 @@ Write-Host "`nSource File: $SourceFile"
 # Step 1: Clone the repository to the target folder
 Write-Host "`nCloning repository to $TargetFolder ..."
 
-Write-Host "`nWarning: "+(Test-Path $TargetFolder) "Target folder  exists?"
-
 if (Test-Path $TargetFolder) {
     Write-Host "`nWarning: Target folder already exists. Removing it..."
     Remove-Item -Path $TargetFolder -Recurse -Force
@@ -55,6 +56,7 @@ if ($LASTEXITCODE -ne 0) {
     #Pause-ForKey
     exit 1
 }
+
 
 
 # Step 2: Replace "GodotAndroidPluginTemplate" with plugin name in specified files
@@ -192,9 +194,9 @@ Write-Host "`nRunning Gradle assemble..."
 Push-Location $TargetFolder
 try {
     if ($IsWindows -or $PSVersionTable.PSVersion.Major -lt 6) {
-        .\gradlew.bat assemble
+        .\gradlew.bat assemble --no-daemon
     } else {
-        ./gradlew assemble
+        ./gradlew assemble --no-daemon
     }
     
     if ($LASTEXITCODE -eq 0) {
@@ -224,6 +226,40 @@ if ($InstallFolder) {
         Write-Host "Copying plugin from $sourcePluginDir to $destinationPluginDir"
         Copy-Item -Path $sourcePluginDir -Destination $destinationPluginDir -Recurse -Force
         Write-Host "Plugin installed successfully to: $destinationPluginDir" -ForegroundColor Green
+        # Copy InterfaceScript to install folder if provided
+        if ($InterfaceScript -and (Test-Path $InterfaceScript)) {
+            $interfaceScriptName = Split-Path -Leaf $InterfaceScript
+            $targetInterfacePath = Join-Path $destinationPluginDir $interfaceScriptName
+            try {
+                Copy-Item -Path $InterfaceScript -Destination $targetInterfacePath -Force -ErrorAction Stop
+                Write-Host "Copied InterfaceScript to $targetInterfacePath"
+                # Replace commented lines in the interface script between markers
+                $interfaceContent = Get-Content -Path $targetInterfacePath -Raw
+
+                $lines = Get-Content -Path $targetInterfacePath
+                $inSection = $false
+                $processedLines = foreach ($line in $lines) {
+                    if ($line -match '# BEGIN_ANDROID_PLUGIN_INCLUDE') {
+                        $inSection = $true
+                    }
+                    elseif ($line -match '# END_ANDROID_PLUGIN_INCLUDE') {
+                        $inSection = $false
+                    }
+                    elseif ($inSection -and $line -match '^\s*#\s*(.+)$') {
+                        # Uncomment the line
+                        $matches[1]
+                    }
+                    else {
+                        $line
+                    }
+                }
+                Set-Content -Path $targetInterfacePath -Value $processedLines
+                Write-Host "Uncommented lines in InterfaceScript between markers"
+            } catch {
+                Write-Host "Failed to copy InterfaceScript: $_" -ForegroundColor Red
+                exit 1
+            }
+        }
     } else {
         Write-Warning "Plugin directory not found at: $sourcePluginDir"
     }
