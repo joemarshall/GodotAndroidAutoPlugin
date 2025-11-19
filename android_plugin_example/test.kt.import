@@ -1,0 +1,22 @@
+[remap]
+
+importer="androidcode"
+type="Resource"
+uid="uid://d3uqptpjxryl6"
+path="res://.godot/imported/test.kt-edb455f2bf38cf3c095a1f549248e6b6.res"
+
+[deps]
+
+source_file="res://android_plugin_example/test.kt"
+dest_files=["res://.godot/imported/test.kt-edb455f2bf38cf3c095a1f549248e6b6.res"]
+
+[params]
+
+make_plugin=true
+extra_maven_deps=""
+plugin_description="Generated plugin"
+plugin_version="1.0"
+plugin_author="Jo Bloggs"
+plugin_name="generated_test"
+auto_enable_plugin=true
+godot_interface_script="res://example_plugin_code/test.gd"
