@@ -19,4 +19,4 @@ plugin_version="1.0"
 plugin_author="Jo Bloggs"
 plugin_name="generated_test"
 auto_enable_plugin=true
-godot_interface_script="res://example_plugin_code/test.gd"
+godot_interface_script="./test.gd"

@@ -1,0 +1,22 @@
+[remap]
+
+importer="androidcode"
+type="Resource"
+uid="uid://dhwp5m50pj7nu"
+path="res://.godot/imported/camera2.kt-c1e185348d4fb32276752e0e3f40156b.res"
+
+[deps]
+
+source_file="res://android_plugin_example/camera2.kt"
+dest_files=["res://.godot/imported/camera2.kt-c1e185348d4fb32276752e0e3f40156b.res"]
+
+[params]
+
+make_plugin=true
+extra_maven_deps=""
+plugin_description="Generated plugin"
+plugin_version="1.0"
+plugin_author="Jo Bloggs"
+plugin_name="generated_camera2"
+auto_enable_plugin=true
+godot_interface_script="./camera2.gd"

@@ -35,6 +35,8 @@ func _get_import_options(path, preset_index):
 	var generated_default_value="generated_"+basename
 	if !FileAccess.file_exists(companion_script):
 		companion_script=""
+	else:
+		companion_script = "./"+basename + ".gd"
 	return [{"name": "make_plugin", "default_value": preset_index==1},	{"name":"extra_maven_deps","default_value":""},
 	{"name":"plugin_description","default_value":"Generated plugin"},
 	{"name":"plugin_version","default_value":"1.0"},
@@ -131,11 +133,17 @@ func _import(source_file, save_path, options, platform_variants, gen_files):
 	if options["extra_maven_deps"]!="":
 		extra_args = ["-MavenDependencies",options["extra_maven_deps"]]
 	if options["godot_interface_script"]!="":
-		extra_args = ["-InterfaceScript",ProjectSettings.globalize_path(options["godot_interface_script"])]
+		var interface_path = options["godot_interface_script"]
+		if interface_path.is_relative_path():
+			interface_path=source_file.get_base_dir()+ "/" + interface_path
+			interface_path = interface_path.simplify_path()
+		interface_path = ProjectSettings.globalize_path(interface_path)
+		extra_args = ["-InterfaceScript",interface_path]
 	var params = ["-Command",create_plugin_script,"-SourceFile",ProjectSettings.globalize_path(source_file),"-TargetFolder",build_folder,"-PluginName",plugin_name,"-Description",
 	  options["plugin_description"],"-Author",options["plugin_author"],"-Version",options["plugin_version"],"-InstallFolder",install_folder]+extra_args
 	params = params.map(_quotify)
 	print("**************************** Building plugin ****************************")
+	print(params)
 	var output = []
 	var call_bound = do_build.bind(params,coderesource,filename,options["auto_enable_plugin"],plugin_name,currently_enabled)
 	active_tasks[filename] = WorkerThreadPool.add_task(call_bound)

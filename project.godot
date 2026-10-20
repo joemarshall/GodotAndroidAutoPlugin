@@ -8,11 +8,15 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="godottest"
 run/main_scene="uid://bcym7j0wsq4l4"
-config/features=PackedStringArray("4.5", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
 [dotnet]
@@ -21,7 +25,7 @@ project/assembly_name="godottest"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/androidcodeimporter/plugin.cfg", "res://addons/generated_test/plugin.cfg")
+enabled=PackedStringArray("res://addons/androidcodeimporter/plugin.cfg", "res://addons/generated_camera2/plugin.cfg", "res://addons/generated_test/plugin.cfg")
 
 [rendering]
 

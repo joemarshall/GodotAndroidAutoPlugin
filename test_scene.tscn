@@ -1,8 +1,28 @@
-[gd_scene load_steps=2 format=3 uid="uid://bcym7j0wsq4l4"]
+[gd_scene format=3 uid="uid://bcym7j0wsq4l4"]
 
 [ext_resource type="Script" uid="uid://bjdj54lpaxqon" path="res://test_plugin.gd" id="1_uhqqe"]
 
-[node name="Node3D" type="Node3D"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_uhqqe"]
 
-[node name="Node" type="Node" parent="."]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uhqqe"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uhqqe"]
+
+[sub_resource type="Sky" id="Sky_uhqqe"]
+sky_material = SubResource("ProceduralSkyMaterial_uhqqe")
+
+[sub_resource type="Environment" id="Environment_ia1lp"]
+background_mode = 2
+sky = SubResource("Sky_uhqqe")
+
+[node name="Node3D" type="Node3D" unique_id=888154924]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=369262883]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -2.274402)
+mesh = SubResource("PlaneMesh_uhqqe")
+surface_material_override/0 = SubResource("StandardMaterial3D_uhqqe")
 script = ExtResource("1_uhqqe")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=912362682]
+environment = SubResource("Environment_ia1lp")
+current = true

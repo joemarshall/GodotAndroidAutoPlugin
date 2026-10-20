@@ -45,11 +45,13 @@ Write-Host "`nSource File: $SourceFile"
 Write-Host "`nCloning repository to $TargetFolder ..."
 
 if (Test-Path $TargetFolder) {
-    Write-Host "`nWarning: Target folder already exists. Removing it..."
-    Remove-Item -Path $TargetFolder -Recurse -Force
+    Write-Host "`nWarning: Target folder already exists. Revoking git changed files..."
+    pushd $TargetFolder
+    git checkout .
+    popd
+}else{
+    git clone $GitRepository $TargetFolder --depth 1
 }
-
-git clone $GitRepository $TargetFolder --depth 1
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "`nFailed to clone repository"
