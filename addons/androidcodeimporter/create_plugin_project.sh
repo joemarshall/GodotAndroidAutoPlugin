@@ -146,7 +146,8 @@ if [[ -f "$source_file" ]]; then
     target_file_path="$target_java_dir/$(basename "$source_file")"
     printf 'Copied %s to %s\n' "$source_file" "$target_java_dir"
     printf 'Updating package declaration in source file...\n'
-    NEW_PACKAGE="$new_package" perl -0pi -e 's/package\s+[\w.]+/package $ENV{NEW_PACKAGE}/' "$target_file_path"
+    sed -E "s/package[[:space:]]+[[:alnum:]_.]+/package ${new_package}/" "$target_file_path" > "$target_file_path.tmp"
+    mv "$target_file_path.tmp" "$target_file_path"
     printf 'Updated package to: %s\n' "$new_package"
 else
     printf 'Source file not found: %s\n' "$source_file" >&2
