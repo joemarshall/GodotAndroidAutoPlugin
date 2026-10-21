@@ -47,7 +47,8 @@ func _get_import_options(path, preset_index):
 	]
 
 func do_build(params,coderesource,filename,auto_enable,plugin_name,currently_enabled):
-	var pipes = OS.execute_with_pipe("pwsh.exe",params,false)
+	var executable = "pwsh.exe" if OS.get_name() == "Windows" else "bash"
+	var pipes = OS.execute_with_pipe(executable,params,false)
 	var stdio = pipes["stdio"]
 	var stderr = pipes["stderr"]
 	var pid = pipes["pid"]
@@ -127,7 +128,9 @@ func _import(source_file, save_path, options, platform_variants, gen_files):
 
 	var build_folder = ProjectSettings.globalize_path("res://.godot/generated/"+plugin_name)
 	var install_folder = ProjectSettings.globalize_path("res://addons/"+plugin_name)
-	var create_plugin_script = ProjectSettings.globalize_path("res://addons/androidcodeimporter/create_plugin_project.ps1")
+	var is_windows = OS.get_name() == "Windows"
+	var script_name = "create_plugin_project.ps1" if is_windows else "create_plugin_project.sh"
+	var create_plugin_script = ProjectSettings.globalize_path("res://addons/androidcodeimporter/" + script_name)
 	 	# build an AAR
 	var extra_args=[]
 	if options["extra_maven_deps"]!="":
@@ -139,9 +142,14 @@ func _import(source_file, save_path, options, platform_variants, gen_files):
 			interface_path = interface_path.simplify_path()
 		interface_path = ProjectSettings.globalize_path(interface_path)
 		extra_args = ["-InterfaceScript",interface_path]
-	var params = ["-Command",create_plugin_script,"-SourceFile",ProjectSettings.globalize_path(source_file),"-TargetFolder",build_folder,"-PluginName",plugin_name,"-Description",
+	var params = ["-SourceFile",ProjectSettings.globalize_path(source_file),"-TargetFolder",build_folder,"-PluginName",plugin_name,"-Description",
 	  options["plugin_description"],"-Author",options["plugin_author"],"-Version",options["plugin_version"],"-InstallFolder",install_folder]+extra_args
-	params = params.map(_quotify)
+	if is_windows:
+		params.push_front(create_plugin_script)
+		params.push_front("-Command")
+		params = params.map(_quotify)
+	else:
+		params.push_front(create_plugin_script)
 	print("**************************** Building plugin ****************************")
 	print(params)
 	var output = []
