@@ -1,4 +1,6 @@
-package org.godotengine.plugin.android.generated.generated_camera2
+// the package will be generated at compiile time based on plugin name,
+// so it doesn't matter what is in here
+package IGNORED
 
 
 import android.content.Context

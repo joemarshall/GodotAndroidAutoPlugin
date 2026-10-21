@@ -1,5 +1,6 @@
-// TODO: Update to match your plugin's package name.
-package org.godotengine.plugin.android.generated.test
+// the package will be generated based on plugin name,
+// so it doesn't matter what is in here
+package IGNORED
 
 import android.util.Log
 import android.widget.Toast
